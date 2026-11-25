@@ -7,5 +7,12 @@ import { mkdirSync, writeFileSync } from "node:fs";
 const LINE =
   "My therapist said I keep dating men who ghost me, then billed me for the hour and vanished mid-sentence.";
 
+// Gate guard: the sealed scorer only accepts UTF-8 text of 1 to 200
+// characters, not only whitespace. Fail loudly here rather than shipping
+// an entry the gate would refuse.
+if (LINE.length < 1 || LINE.length > 200 || LINE.trim().length === 0) {
+  throw new Error(`entry line must be 1-200 characters, got ${LINE.length}`);
+}
+
 mkdirSync("/output", { recursive: true });
 writeFileSync("/output/entry.txt", LINE, "utf8");
